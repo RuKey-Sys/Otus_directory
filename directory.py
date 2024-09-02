@@ -1,9 +1,10 @@
 import json
-PATH = 'Directory'
+PATH = 'Directory.json'
 
 
-def OpenFile(fileName=PATH):  # Читаем и запоминаем файл
-    with open(fileName, 'a+', encoding='UTF-8') as file:
+def Open_File(file_Name=PATH):
+    '''Читаем и запоминаем файл'''
+    with open(file_Name, 'a+', encoding='UTF-8') as file:
         file.seek(0)
         data = file.read()
         if data:
@@ -12,14 +13,16 @@ def OpenFile(fileName=PATH):  # Читаем и запоминаем файл
             return {}
 
 
-def SaveFile(data, file_Name):  # Сохраняем файл
+def Save_File(data: str, file_Name: str):
+    '''Сохраняем файл'''
     with open(file_Name, 'w+', encoding='UTF-8') as file:
         file.seek(0)
         json.dump(data, file, indent=4, ensure_ascii=False)
         return
 
 
-def ShowContacts(data):  # выбираем нужные атрибуты и выводим
+def Show_Contacts(data: str):
+    '''выбираем нужные атрибуты и выводим'''
     print(f"{'Phone':<15}{'Name':<10}{'Description':<20}")
     for key, value in data.items():
         show_data = {
@@ -31,7 +34,8 @@ def ShowContacts(data):  # выбираем нужные атрибуты и в�
               show_data["description"]:<20}")
 
 
-def CreateContact(data):  # Добавляем новое значение
+def Create_Contact(data: str):
+    '''Добавляем новое значение'''
     new_record = {
         "name": input('Введите имя: '),
         "phone": input('Введите номер: '),
@@ -42,12 +46,16 @@ def CreateContact(data):  # Добавляем новое значение
     return data
 
 
-def FindContact(data):  # Поиск записи
+def Find_Contact(data: str):
+    '''
+    Поиск записи
+    Сначала поиск всех совпадений и добавление в пустой словарь
+    После чего вывод поочередно найденные записи
+    '''
     found_Dict = {}
-    findValue = input('Введите значение поиска: ')
-    # Сначала поиск всех совпадений и добавление в пустой словарь
+    find_Value = input('Введите значение поиска: ')
     for key, value in data.items():
-        if findValue in value['name'] or findValue in value['phone'] or findValue in value['description']:
+        if find_Value in value['name'] or find_Value in value['phone'] or find_Value in value['description']:
             show_data = {
                 "name": value['name'],
                 "phone": value['phone'],
@@ -55,16 +63,16 @@ def FindContact(data):  # Поиск записи
             }
             found_Dict[key] = value
     print("\n"*20)
-    # После чего вывод поочередно найденные записи
     print(f'Найдено {len(found_Dict.keys())} записей:')
     for i, (key, value) in enumerate(found_Dict.items()):
         print("\n")
         print(
             f"{i+1} запись:\t{value["phone"]:<15}{value["name"]:<10}{value["description"]:<20}\n")
-        show_itemMenu(data, key, value)
+        show_item_Menu(data, key, value)
 
 
-def ChangeContact(data, key, value):  # Изменение записи
+def Change_Contact(data: str, key: int, value: str):
+    '''Изменение записи'''
     for value_name, value in data[key].items():
         print("\n"*20)
         new_Value = input(f"{value_name} = {
@@ -74,7 +82,8 @@ def ChangeContact(data, key, value):  # Изменение записи
     print("-"*35)
 
 
-def RemoveContact(data, key, value):  # Удаление записи
+def Remove_Contact(data: str, key: int, value: str):
+    '''Удаление записи'''
     print("\n"*20)
     print(f"{value["phone"]:<15}{value["name"]:<10}{value["description"]:<20}")
     approve = input('Действительно хотите удалить запсиь? Default(n) Y/n')
@@ -82,65 +91,68 @@ def RemoveContact(data, key, value):  # Удаление записи
         data.pop(key)
 
 
-def ExitDirectory(data, file_Name=PATH):  # выход из программы
+def Exit_Directory(data: str, file_Name=PATH):
+    '''выход из программы'''
     print('\n'*20)
-    isSave = input('Срхранить файл? default(Y) Y/n: ')
-    if isSave.lower() != 'n':
-        SaveFile(data, file_Name) if file_Name else SaveFile(data)
+    is_Save = input('Срхранить файл? default(Y) Y/n: ')
+    if is_Save.lower() != 'n':
+        Save_File(data, file_Name) if file_Name else Save_File(data)
     else:
         return
 
 
-def show_mainMenu(data, name=None):  # ПОказать главное меню
-    mainMenu = [
+def show_main_Menu(data: str, name=None):
+    '''ПОказать главное меню'''
+    main_Menu = [
         'показать все контакты',
         'создать контакт',
         'найти контакт',
         'выход',
     ]
-    dict_MainMenu = {}
-    for i, item in enumerate(mainMenu):
-        dict_MainMenu[i+1] = item
+    dict_Main_Menu = {}
+    for i, item in enumerate(main_Menu):
+        dict_Main_Menu[i+1] = item
         print(f'{i+1}: {item}')
     if name:
         name = name.lower()
         if name == 'показать все контакты':
             print('\n'*20)
-            ShowContacts(data)
+            Show_Contacts(data)
         elif name == 'создать контакт':
             print('\n'*20)
-            CreateContact(data)
+            Create_Contact(data)
         elif name == 'найти контакт':
             print('\n'*20)
-            FindContact(data)
+            Find_Contact(data)
         elif name == 'выход':
             print('\n'*20)
-            ExitDirectory(data)
-    return dict_MainMenu
+            Exit_Directory(data)
+    return dict_Main_Menu
 
 
-def show_itemMenu(data, key, value):  # Показать подменю
-    itemMenu = [
+def show_item_Menu(data: str, key: int, value: str):
+    '''Показать подменю'''
+    item_Menu = [
         'изменить контакт',
         'удалить контакт',
         'выход'
     ]
-    dict_ItemMenu = {}
-    for i, item in enumerate(itemMenu):
-        dict_ItemMenu[i+1] = item
+    dict_Item_Menu = {}
+    for i, item in enumerate(item_Menu):
+        dict_Item_Menu[i+1] = item
         print(f'{i+1}: {item}')
     print("-"*20)
 
     chosen = input("Выберите пункт меню (Если не та запись, нажмите Enter)")
 
     if chosen and chosen.isdigit():
-        if int(chosen) in dict_ItemMenu.keys() and dict_ItemMenu[int(chosen)] != 'выход':
-            if dict_ItemMenu[int(chosen)] == 'изменить контакт':
-                ChangeContact(data, key, value)
-            elif dict_ItemMenu[int(chosen)] == 'удалить контакт':
-                RemoveContact(data, key, value)
-        elif dict_ItemMenu[int(chosen)] == 'выход':
-            show_mainMenu(data)
+        if int(chosen) in dict_Item_Menu.keys() and dict_Item_Menu[int(chosen)] != 'выход':
+            if dict_Item_Menu[int(chosen)] == 'изменить контакт':
+                Change_Contact(data, key, value)
+            elif dict_Item_Menu[int(chosen)] == 'удалить контакт':
+                Remove_Contact(data, key, value)
+        elif dict_Item_Menu[int(chosen)] == 'выход':
+            show_main_Menu(data)
         else:
             return
     else:
@@ -149,13 +161,13 @@ def show_itemMenu(data, key, value):  # Показать подменю
 
 # Открываем и считываем справочник
 file_Name = input(f'Введите имя файла(по умолчанию {PATH}): ')
-data = OpenFile(file_Name) if file_Name else OpenFile()
+data = Open_File(file_Name) if file_Name else Open_File()
 
-
+work_Flag=True
 print("-"*20)
-while True:
+while work_Flag:
 
-    dict_MainMenu = show_mainMenu(data)
+    dict_Main_Menu = show_main_Menu(data)
     print("-"*20)
 
     # Читаем выбор пользователя
@@ -163,15 +175,15 @@ while True:
 
     if chosen and chosen.isdigit():
         # Если выбор корректный и не "выход"
-        if int(chosen) in dict_MainMenu.keys() and dict_MainMenu[int(chosen)] != 'выход':
+        if int(chosen) in dict_Main_Menu.keys() and dict_Main_Menu[int(chosen)] != 'выход':
             # Показываем меню
-            show_mainMenu(data, dict_MainMenu[int(chosen)])
+            show_main_Menu(data, dict_Main_Menu[int(chosen)])
             print("-"*20)
         # Если выход
-        elif dict_MainMenu[int(chosen)] == 'выход':
-            ExitDirectory(
-                data, file_Name) if file_Name else ExitDirectory(data)
-            break
+        elif dict_Main_Menu[int(chosen)] == 'выход':
+            Exit_Directory(
+                data, file_Name) if file_Name else Exit_Directory(data)
+            work_Flag = False
         else:
             print('Некорректный ввод')
     else:
