@@ -29,7 +29,7 @@
    ```
 3. Запустите программу:
    ```bash
-   python directory.py
+   python main.py
    ```
 ## Использование
 
