@@ -19,7 +19,7 @@ def save_file(data: dict, file_Name: str):
     json_string = data.export_data()
     with open(file_Name, 'w+', encoding='UTF-8') as file:
         file.seek(0)
-        json.dump(json_string,file,indent=4, ensure_ascii=False)
+        json.dump(json_string, file, indent=4, ensure_ascii=False)
         return
 
 
@@ -33,10 +33,10 @@ def find_contact(directory: dict, search_value: str):
 
     for key, contact in directory.data.items():
         # Приводим поля контакта к нижнему регистру для корректного поиска
-        if (search_value in contact.name.lower() or 
-            search_value in contact.number or 
-            search_value in contact.description.lower()):
-            
+        if (search_value in contact.name.lower() or
+            search_value in contact.number or
+                search_value in contact.description.lower()):
+
             # Формируем данные для отображения
             found_contacts[key] = {
                 "name": contact.name,
@@ -49,10 +49,22 @@ def find_contact(directory: dict, search_value: str):
 
 def change_contact(directory: dict, key: int, contact: dict):
     '''Изменение записи'''
-    new_contact ={}
-    contact = Contact(contact["name"], contact["phone"], contact["description"])
+    new_contact = {}
+    contact = Contact(contact["name"], contact["phone"],
+                      contact["description"])
+
     new_name = input(f"Имя ({contact.name}): ").strip()
-    new_phone = input(f"Телефон ({contact.number}): ").strip()
+    phone_not_valid = True
+    while phone_not_valid:
+        new_phone = input(f"Телефон ({contact.number}): ").strip()
+        if not new_phone:
+            new_phone = contact.number
+            phone_not_valid = False
+        elif Contact.validate_number(new_phone):
+            phone_not_valid = False
+        else:
+            print(
+                "Некорректный номер телефона. Должно быть 10 символов. Попробуйте еще раз.")
     new_description = input(f"Описание ({contact.description}): ").strip()
 
     # Проверяем, введены ли новые значения, иначе оставляем старые
@@ -64,10 +76,12 @@ def change_contact(directory: dict, key: int, contact: dict):
 
     return directory
 
+
 def remove_contact(directory: dict, key: int, contact: dict):
     '''Удаление записи'''
     print("\n"*20)
-    print(f"{contact["phone"]:<15}{contact["name"]:<10}{contact["description"]:<20}")
+    print(f"{contact["phone"]:<15}{contact["name"]:<10}{
+          contact["description"]:<20}")
     approve = input('Действительно хотите удалить запсиь? Default(n) Y/n')
     if approve.lower() == 'y':
         directory.remove_contact(key)
@@ -78,9 +92,6 @@ def exit_directory(data: str, file_Name=PATH):
     print('\n'*20)
     is_Save = input('Срхранить файл? default(Y) Y/n: ')
     if is_Save.lower() != 'n':
-        save_file(data, file_Name) if file_Name else save_file(data)
+        save_file(data, file_Name)
     else:
         return
-
-
-

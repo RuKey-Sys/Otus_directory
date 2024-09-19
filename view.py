@@ -1,6 +1,7 @@
 from directory import PATH
 from contacts import Contact
 
+
 def input_file_name(PATH=PATH):
     file_name = input(f'Введите имя файла(по умолчанию {PATH}): ')
     return file_name
@@ -17,15 +18,17 @@ def incorrect_input():
 def enter_value():
     return input("Введите значение поиска: ")
 
+
 def choose_second_item():
     return input("Выберите пункт меню (Если не та запись, нажмите Enter)")
 
 
 def show_main_menu(menu: dict):
     '''Показать главное меню'''
-    for key,value in menu.items():
+    for key, value in menu.items():
         print(f'{key}: {value}')
     return
+
 
 def show_item_Menu():
     '''Показать подменю'''
@@ -51,14 +54,17 @@ def create_contact():
     }
     return new_record
 
-def show_contact(i,k,value):
+
+def show_contact(i, k, value):
+    '''Показать контакт'''
     print(f'запись: {i+1}/{k}')
     print("\n")
     print(
         f"{value["phone"]:<15}{value["name"]:<10}{value["description"]:<20}\n")
-    
+
+
 def show_contacts(data: dict):
-    '''выбираем нужные атрибуты и выводим'''
+    '''Показать все контакты'''
     print(f"{'Phone':<15}{'Name':<10}{'Description':<20}")
     for item in data.data.values():
         print(Contact.show_contact(item))

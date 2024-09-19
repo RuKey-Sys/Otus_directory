@@ -19,7 +19,7 @@ class Menu:
         """Получает выбор пользователя."""
         while True:
             choice = input("Выберите пункт меню: ")
-            if choice.isdigit() and int(choice) in self.items:
+            if Menu.is_valid_choice(choice, self.items):
                 return int(choice)
             else:
                 print("Некорректный ввод. Пожалуйста, выберите существующий пункт меню.")
@@ -31,3 +31,7 @@ class Menu:
         """
         choice = self.get_user_choice()
         return self.items[choice]
+    
+    @staticmethod
+    def is_valid_choice(choice, menu_items):
+        return choice.isdigit() and int(choice) in menu_items
